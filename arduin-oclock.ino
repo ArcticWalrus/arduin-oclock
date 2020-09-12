@@ -9,22 +9,27 @@ int minuteDecPin = 6;
 int hourUnitPin = 5;
 int hourDecPin = 4;
 
+// Setting interrupt pins
+int minuteUptick = 2;
+int hourUptick = 3;
+
 // Setting initial values for time
-int minuteUnit = 0;
-int minuteDec = 0;
-int hourUnit = 0;
-int hourDec = 0;
+volatile unsigned char minuteUnit = 0;
+unsigned char minuteDec = 0;
+volatile unsigned char hourUnit = 0;
+unsigned char hourDec = 0;
 
 // Time variables to avoid using delay
 unsigned long current_time;
 unsigned long last_time;
-unsigned int msPerMin = 1000 * 60;
+//unsigned int msPerMin = 1000 * 60;
+unsigned int msPerMin = 250;
 
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
 
 // Required functions
-void displayTimeUnit(int outputPin, int value){
+void displayTimeUnit(int outputPin, unsigned char value){
   // Need this ordering with delay in the middle to prevent bleeding between numbers
   (outputPin == hourUnitPin) ? displayNumberWithPeriod(value) : displayNumber(value);
   digitalWrite(outputPin, LOW);
