@@ -18,7 +18,7 @@ int hourDec = 0;
 // Time variables to avoid using delay
 unsigned long current_time;
 unsigned long last_time;
-int msPerSec = 60000;
+unsigned long msPerMin = 1000 * 60;
 
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
@@ -46,7 +46,7 @@ void displayNumberWithPeriod(unsigned char num){
 
 void updateTime(){
   current_time = millis();
-  if (current_time - last_time >= msPerSec){
+  if (current_time - last_time >= msPerMin){
     minuteUnit++;
     last_time = current_time;
   }
@@ -83,12 +83,6 @@ void setup(){
   pinMode(minuteDecPin, OUTPUT);
   pinMode(hourUnitPin, OUTPUT);
   pinMode(hourDecPin, OUTPUT);
-
-  // Examples for setting digits on display
-  digitalWrite(minuteUnitPin, HIGH);
-  digitalWrite(minuteDecPin, HIGH);
-  digitalWrite(hourUnitPin, HIGH);
-  digitalWrite(hourDecPin, HIGH);
 
   current_time = millis();
   last_time = current_time;
