@@ -18,7 +18,7 @@ int hourDec = 0;
 // Time variables to avoid using delay
 unsigned long current_time;
 unsigned long last_time;
-unsigned long msPerMin = 1000 * 60;
+unsigned int msPerMin = 1000 * 60;
 
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
@@ -74,9 +74,10 @@ void updateTime(){
 
 void setup(){
   // Pins for shift register
-  pinMode(latch,OUTPUT);
-  pinMode(clock,OUTPUT);
-  pinMode(data,OUTPUT);
+  pinMode(latch, OUTPUT);
+  pinMode(clock, OUTPUT);
+  pinMode(data, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // Pins for digit control on display
   pinMode(minuteUnitPin, OUTPUT);
