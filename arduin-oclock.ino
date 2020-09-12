@@ -47,7 +47,7 @@ void setup(){
 
 void displayTimeUnit(int outputPin, int value){
   // Need this ordering with delay in the middle to prevent bleeding between numbers
-  displayNumber(value);
+  (outputPin == hourUnitPin) ? displayNumberWithPeriod(value) : displayNumber(value);
   digitalWrite(outputPin, LOW);
   delay(1);
   digitalWrite(outputPin, HIGH);
@@ -61,7 +61,7 @@ void displayNumber(unsigned char num){
 
 void displayNumberWithPeriod(unsigned char num){
   digitalWrite(latch,LOW);
-  shiftOut(data,clock,MSBFIRST,table[num]);
+  shiftOut(data,clock,MSBFIRST,(1 << 7) | table[num]);
   digitalWrite(latch,HIGH);
 }
 
