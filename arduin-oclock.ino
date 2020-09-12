@@ -9,7 +9,7 @@ int minuteDecPin = 6;
 int hourUnitPin = 5;
 int hourDecPin = 4;
 
-// Setting interrupt pins
+// Setting interrupt pins, these are the only two usable for interrupts
 int minuteUptick = 2;
 int hourUptick = 3;
 
@@ -62,11 +62,16 @@ void updateTime(){
     if (minuteDec >= 6){
       minuteDec = 0;
       hourUnit++;
-      if (hourUnit >= 9){
+      if (hourUnit >= 10){
         hourUnit = 0;
         hourDec++;
       }
     }
+  }
+  // Check for reset on hours due to interrupt
+  if (hourUnit >= 10){
+    hourUnit = 0;
+    hourDec++;
   }
   // Check for reset at 24h
   if (hourUnit >= 4 && hourDec >= 2){
@@ -75,6 +80,18 @@ void updateTime(){
     hourUnit = 0;
     hourDec = 0;
   }
+}
+
+void turnOnBoardLEDISR(){
+  digitalWrite(LED_BUILTIN, HIGH);
+}
+
+void increaseHourISR(){
+  hourUnit++;
+}
+
+void increaseMinutesISR(){
+  minuteUnit++;
 }
 
 void setup(){
@@ -90,6 +107,10 @@ void setup(){
   pinMode(hourUnitPin, OUTPUT);
   pinMode(hourDecPin, OUTPUT);
 
+  // Attaching interrupts
+  attachInterrupt(digitalPinToInterrupt(hourUptick), increaseHourISR, RISING);
+
+  // Starting timer
   current_time = millis();
   last_time = current_time;
 }
