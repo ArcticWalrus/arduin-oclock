@@ -9,6 +9,16 @@ int minuteDecPin = 6;
 int hourUnitPin = 5;
 int hourDecPin = 4;
 
+// Setting initial values for time
+int minuteUnit = 0;
+int minuteDec = 0;
+int hourUnit = 0;
+int hourDec = 0;
+
+// Time variables to avoid using delay
+unsigned long current_time;
+unsigned long last_time;
+
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
 
@@ -24,10 +34,15 @@ void setup(){
   pinMode(hourUnitPin, OUTPUT);
   pinMode(hourDecPin, OUTPUT);
 
+  // Examples for setting digits on display
   digitalWrite(minuteUnitPin, HIGH);
   digitalWrite(minuteDecPin, LOW);
   digitalWrite(hourUnitPin, HIGH);
   digitalWrite(hourDecPin, HIGH);
+
+  // Init times
+  current_time = millis();
+  last_time = current_time;
 }
 
 /*   The most common method of using 74CH595 shift register
