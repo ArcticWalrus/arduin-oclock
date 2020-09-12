@@ -51,20 +51,20 @@ void updateTime(){
     last_time = current_time;
   }
   // Carry overs
-  if (minuteUnit == 10){
+  if (minuteUnit >= 10){
     minuteUnit = 0;
     minuteDec++;
-    if (minuteDec == 6){
+    if (minuteDec >= 6){
       minuteDec = 0;
       hourUnit++;
-      if (hourUnit == 9){
+      if (hourUnit >= 9){
         hourUnit = 0;
         hourDec++;
       }
     }
   }
   // Check for reset at 24h
-  if (hourUnit == 4 && hourDec == 2){
+  if (hourUnit >= 4 && hourDec >= 2){
     minuteUnit = 0; 
     minuteDec = 0;
     hourUnit = 0;
