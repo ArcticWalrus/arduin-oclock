@@ -22,8 +22,8 @@ unsigned char hourDec = 0;
 // Time variables to avoid using delay
 unsigned long current_time;
 unsigned long last_time;
-//unsigned int msPerMin = 1000 * 60;
-unsigned int msPerMin = 250;
+unsigned int msPerMin = 1000 * 60;
+//unsigned int msPerMin = 50;
 
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
@@ -59,14 +59,11 @@ void updateTime(){
   if (minuteUnit >= 10){
     minuteUnit = 0;
     minuteDec++;
-    if (minuteDec >= 6){
-      minuteDec = 0;
-      hourUnit++;
-      if (hourUnit >= 10){
-        hourUnit = 0;
-        hourDec++;
-      }
-    }
+  }
+  // Check for reset on decimal position on minutes
+  if (minuteDec >= 6){
+    minuteDec = 0;
+    hourUnit++;
   }
   // Check for reset on hours due to interrupt
   if (hourUnit >= 10){
