@@ -10,10 +10,10 @@ int hourUnitPin = 5;
 int hourDecPin = 4;
 
 // Setting initial values for time
-int minuteUnit = 0;
-int minuteDec = 0;
-int hourUnit = 0;
-int hourDec = 0;
+int minuteUnit = 4;
+int minuteDec = 1;
+int hourUnit = 2;
+int hourDec = 3;
 
 // Time variables to avoid using delay
 unsigned long current_time;
@@ -36,7 +36,7 @@ void setup(){
 
   // Examples for setting digits on display
   digitalWrite(minuteUnitPin, HIGH);
-  digitalWrite(minuteDecPin, LOW);
+  digitalWrite(minuteDecPin, HIGH);
   digitalWrite(hourUnitPin, HIGH);
   digitalWrite(hourDecPin, HIGH);
 
@@ -45,15 +45,29 @@ void setup(){
   last_time = current_time;
 }
 
-void displayTime(unsigned char num){
+void displayTimeUnit(int outputPin, int value){
+  // Need this ordering with delay in the middle to prevent bleeding between numbers
+  displayNumber(value);
+  digitalWrite(outputPin, LOW);
+  delay(1);
+  digitalWrite(outputPin, HIGH);
+}
+
+void displayNumber(unsigned char num){
+  digitalWrite(latch,LOW);
+  shiftOut(data,clock,MSBFIRST,table[num]);
+  digitalWrite(latch,HIGH);
+}
+
+void displayNumberWithPeriod(unsigned char num){
   digitalWrite(latch,LOW);
   shiftOut(data,clock,MSBFIRST,table[num]);
   digitalWrite(latch,HIGH);
 }
 
 void loop(){
-  for(int i = 0; i < 17; i++){
-    displayTime(i);
-    delay(500);
-  }
+  displayTimeUnit(minuteUnitPin, minuteUnit);
+  displayTimeUnit(minuteDecPin, minuteDec);
+  displayTimeUnit(hourUnitPin, hourUnit);
+  displayTimeUnit(hourDecPin, hourDec);
 }
