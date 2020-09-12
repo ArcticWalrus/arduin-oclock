@@ -10,41 +10,20 @@ int hourUnitPin = 5;
 int hourDecPin = 4;
 
 // Setting initial values for time
-int minuteUnit = 4;
-int minuteDec = 1;
-int hourUnit = 2;
-int hourDec = 3;
+int minuteUnit = 0;
+int minuteDec = 0;
+int hourUnit = 0;
+int hourDec = 0;
 
 // Time variables to avoid using delay
 unsigned long current_time;
 unsigned long last_time;
+int msPerSec = 60000;
 
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
 
-void setup(){
-  // Pins for shift register
-  pinMode(latch,OUTPUT);
-  pinMode(clock,OUTPUT);
-  pinMode(data,OUTPUT);
-
-  // Pins for digit control on display
-  pinMode(minuteUnitPin, OUTPUT);
-  pinMode(minuteDecPin, OUTPUT);
-  pinMode(hourUnitPin, OUTPUT);
-  pinMode(hourDecPin, OUTPUT);
-
-  // Examples for setting digits on display
-  digitalWrite(minuteUnitPin, HIGH);
-  digitalWrite(minuteDecPin, HIGH);
-  digitalWrite(hourUnitPin, HIGH);
-  digitalWrite(hourDecPin, HIGH);
-
-  // Init times
-  current_time = millis();
-  last_time = current_time;
-}
-
+// Required functions
 void displayTimeUnit(int outputPin, int value){
   // Need this ordering with delay in the middle to prevent bleeding between numbers
   (outputPin == hourUnitPin) ? displayNumberWithPeriod(value) : displayNumber(value);
@@ -65,7 +44,58 @@ void displayNumberWithPeriod(unsigned char num){
   digitalWrite(latch,HIGH);
 }
 
+void updateTime(){
+  current_time = millis();
+  if (current_time - last_time >= msPerSec){
+    minuteUnit++;
+    last_time = current_time;
+  }
+  // Carry overs
+  if (minuteUnit == 10){
+    minuteUnit = 0;
+    minuteDec++;
+    if (minuteDec == 6){
+      minuteDec = 0;
+      hourUnit++;
+      if (hourUnit == 9){
+        hourUnit = 0;
+        hourDec++;
+      }
+    }
+  }
+  // Check for reset at 24h
+  if (hourUnit == 4 && hourDec == 2){
+    minuteUnit = 0; 
+    minuteDec = 0;
+    hourUnit = 0;
+    hourDec = 0;
+  }
+}
+
+void setup(){
+  // Pins for shift register
+  pinMode(latch,OUTPUT);
+  pinMode(clock,OUTPUT);
+  pinMode(data,OUTPUT);
+
+  // Pins for digit control on display
+  pinMode(minuteUnitPin, OUTPUT);
+  pinMode(minuteDecPin, OUTPUT);
+  pinMode(hourUnitPin, OUTPUT);
+  pinMode(hourDecPin, OUTPUT);
+
+  // Examples for setting digits on display
+  digitalWrite(minuteUnitPin, HIGH);
+  digitalWrite(minuteDecPin, HIGH);
+  digitalWrite(hourUnitPin, HIGH);
+  digitalWrite(hourDecPin, HIGH);
+
+  current_time = millis();
+  last_time = current_time;
+}
+
 void loop(){
+  updateTime();
   displayTimeUnit(minuteUnitPin, minuteUnit);
   displayTimeUnit(minuteDecPin, minuteDec);
   displayTimeUnit(hourUnitPin, hourUnit);
