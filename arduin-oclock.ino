@@ -90,7 +90,7 @@ void increaseHourISR(){
   hourUnit++;
 }
 
-void increaseMinutesISR(){
+void increaseMinuteISR(){
   minuteUnit++;
 }
 
@@ -109,6 +109,7 @@ void setup(){
 
   // Attaching interrupts
   attachInterrupt(digitalPinToInterrupt(hourUptick), increaseHourISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(minuteUptick), increaseMinuteISR, RISING);
 
   // Starting timer
   current_time = millis();
