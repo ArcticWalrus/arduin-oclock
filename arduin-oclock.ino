@@ -1,7 +1,7 @@
 // Setting pins for shift register
-int latch = 9;  //74HC595  pin 9 STCP
-int clock = 10; //74HC595  pin 10 SHCP
-int data = 8;   //74HC595  pin 8 DS
+int latch = 9;
+int clock = 10;
+int data = 8;
 
 // Setting pins for controlling which digit is displayed
 int minuteUnitPin = 7;
@@ -9,7 +9,7 @@ int minuteDecPin = 6;
 int hourUnitPin = 5;
 int hourDecPin = 4;
 
-// Setting interrupt pins, these are the only two usable for interrupts
+// Setting interrupt pins, these are the only two usable for interrupts on the uno
 int minuteUptick = 2;
 int hourUptick = 3;
 
@@ -28,7 +28,6 @@ unsigned int msPerMin = 1000 * 60;
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
 
-// Required functions
 void displayTimeUnit(int outputPin, unsigned char value){
   // Need this ordering with delay in the middle to prevent bleeding between numbers
   (outputPin == hourUnitPin) ? displayNumberWithPeriod(value) : displayNumber(value);
@@ -50,6 +49,7 @@ void displayNumberWithPeriod(unsigned char num){
 }
 
 void updateTime(){
+  // Counting minutes
   current_time = millis();
   if (current_time - last_time >= msPerMin){
     minuteUnit++;
@@ -79,6 +79,7 @@ void updateTime(){
   }
 }
 
+// For testing that buttons are set up correctly.
 void turnOnBoardLEDISR(){
   digitalWrite(LED_BUILTIN, HIGH);
 }
