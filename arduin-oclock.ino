@@ -1,6 +1,15 @@
+// Library for ultrasonic sensor
+#include "SR04.h"
+
 // Defines for alarm
 #define ALARM_ON 1
 #define ALARM_OFF 0
+
+// Defines for ultrasonic sensor
+#define TRIG_PIN 12
+#define ECHO_PIN 11
+#define MAX_DISTANCE 20
+SR04 ultraSound = SR04(ECHO_PIN, TRIG_PIN);
 
 // Setting pins for shift register
 int latch = 9;
@@ -13,9 +22,6 @@ int minuteDecPin = 6;
 int hourUnitPin = 5;
 int hourDecPin = 4;
 
-// Setting output pin for passive buzzer
-int buzzer = A0;
-
 // Setting interrupt pins, these are the only two usable for interrupts on the uno
 int minuteUptickPin = 2;
 int hourUptickPin = 3;
@@ -23,7 +29,7 @@ int hourUptickPin = 3;
 // Setting initial values for time
 volatile unsigned char minuteUnit = 0;
 unsigned char minuteDec = 0;
-volatile unsigned char hourUnit = 7;
+volatile unsigned char hourUnit = 0;
 unsigned char hourDec = 0;
 
 // Setting time for alarm
@@ -35,11 +41,14 @@ unsigned char alarmHourDec = 0;
 // Variable that keeps the state of the alarm
 unsigned char alarmStatus = 0;
 
+// Setting output pin for passive buzzer
+int buzzer = A0;
+
 // Time variables to avoid using delay
 unsigned long current_time;
 unsigned long last_time;
 //unsigned int msPerMin = 1000 * 60;
-unsigned int msPerMin = 50;
+unsigned int msPerMin = 1000;
 
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
@@ -102,7 +111,7 @@ void checkAlarm(){
     alarmStatus = 1;
   }
   // The hourUnit == 9 will be replace with the motion sensor from the ultrasonic
-  if (alarmStatus == ALARM_ON && hourUnit >= 9){
+  if (alarmStatus == ALARM_ON && ultraSound.Distance() < MAX_DISTANCE){
     alarmStatus = 0;
     digitalWrite(buzzer, LOW);
     digitalWrite(LED_BUILTIN, LOW);
