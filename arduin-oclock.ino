@@ -159,7 +159,6 @@ void setup(){
   pinMode(latch, OUTPUT);
   pinMode(clock, OUTPUT);
   pinMode(data, OUTPUT);
-  pinMode(LED_BUILTIN, OUTPUT);
 
   // Pins for digit control on display
   pinMode(minuteUnitPin, OUTPUT);
@@ -167,8 +166,9 @@ void setup(){
   pinMode(hourUnitPin, OUTPUT);
   pinMode(hourDecPin, OUTPUT);
 
-  // Setting pin for buzzer
+  // Setting pin for alarm buzzer
   pinMode(buzzer, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
 
   // Setting pins for interrupts
   pinMode(hourUptickPin, INPUT);
