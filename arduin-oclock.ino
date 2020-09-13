@@ -125,7 +125,7 @@ void checkAlarm(){
     digitalWrite(LED_BUILTIN, HIGH);
     alarmStatus = 1;
   }
-  // The hourUnit == 9 will be replace with the motion sensor from the ultrasonic
+  // Checking the conditions for turning off the alarm
   if (alarmStatus == ALARM_ON && ultraSound.Distance() < MAX_DISTANCE){
     alarmStatus = 0;
     digitalWrite(buzzer, LOW);
