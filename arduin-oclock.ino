@@ -53,6 +53,10 @@ unsigned int msPerMin = 1000;
 // Array that contains the display hex for 0 through f
 unsigned char table[] = {0x3f,0x06,0x5b,0x4f,0x66,0x6d,0x7d,0x07,0x7f,0x6f,0x77,0x7c,0x39,0x5e,0x79,0x71,0x00};
 
+////////////////////////////////////////////////////////////////
+///////////////// Time display functions //////////////////////
+//////////////////////////////////////////////////////////////
+
 void displayTimeUnit(int outputPin, unsigned char value){
   // Need this ordering with delay in the middle to prevent bleeding between numbers
   (outputPin == hourUnitPin) ? displayNumberWithPeriod(value) : displayNumber(value);
@@ -104,6 +108,17 @@ void updateTime(){
   }
 }
 
+void showCurrentTime(){
+  displayTimeUnit(minuteUnitPin, minuteUnit);
+  displayTimeUnit(minuteDecPin, minuteDec);
+  displayTimeUnit(hourUnitPin, hourUnit);
+  displayTimeUnit(hourDecPin, hourDec);
+}
+
+///////////////////////////////////////////////////////////
+////////////////// Alarm functions ///////////////////////
+/////////////////////////////////////////////////////////
+
 void checkAlarm(){
   if (minuteUnit == alarmMinuteUnit && minuteDec == alarmMinuteDec && hourUnit == alarmHourunit && hourDec == alarmHourDec){
     digitalWrite(buzzer, HIGH);
@@ -118,6 +133,10 @@ void checkAlarm(){
   }
 }
 
+///////////////////////////////////////////////////////
+//////////////// ISRs for interrupts /////////////////
+/////////////////////////////////////////////////////
+
 // For testing that buttons are set up correctly.
 void turnOnBoardLEDISR(){
   digitalWrite(LED_BUILTIN, HIGH);
@@ -130,6 +149,10 @@ void increaseHourISR(){
 void increaseMinuteISR(){
   minuteUnit++;
 }
+
+//////////////////////////////////////////////////
+/////////// Main functions //////////////////////
+////////////////////////////////////////////////
 
 void setup(){
   // Pins for shift register
@@ -163,8 +186,5 @@ void setup(){
 void loop(){
   updateTime();
   checkAlarm();
-  displayTimeUnit(minuteUnitPin, minuteUnit);
-  displayTimeUnit(minuteDecPin, minuteDec);
-  displayTimeUnit(hourUnitPin, hourUnit);
-  displayTimeUnit(hourDecPin, hourDec);
+  showCurrentTime();
 }
