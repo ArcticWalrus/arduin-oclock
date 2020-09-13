@@ -14,11 +14,11 @@ int hourUnitPin = 5;
 int hourDecPin = 4;
 
 // Setting output pin for passive buzzer
-int buzzer = 0;
+int buzzer = A0;
 
 // Setting interrupt pins, these are the only two usable for interrupts on the uno
-int minuteUptick = 2;
-int hourUptick = 3;
+int minuteUptickPin = 2;
+int hourUptickPin = 3;
 
 // Setting initial values for time
 volatile unsigned char minuteUnit = 0;
@@ -104,7 +104,7 @@ void checkAlarm(){
   // The hourUnit == 9 will be replace with the motion sensor from the ultrasonic
   if (alarmStatus == ALARM_ON && hourUnit >= 9){
     alarmStatus = 0;
-    digitalWrite(buzzer, HIGH);
+    digitalWrite(buzzer, LOW);
     digitalWrite(LED_BUILTIN, LOW);
   }
 }
@@ -138,9 +138,13 @@ void setup(){
   // Setting pin for buzzer
   pinMode(buzzer, OUTPUT);
 
+  // Setting pins for interrupts
+  pinMode(hourUptickPin, INPUT);
+  pinMode(minuteUptickPin, INPUT);
+
   // Attaching interrupts
-  attachInterrupt(digitalPinToInterrupt(hourUptick), increaseHourISR, RISING);
-  attachInterrupt(digitalPinToInterrupt(minuteUptick), increaseMinuteISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(hourUptickPin), increaseHourISR, RISING);
+  attachInterrupt(digitalPinToInterrupt(minuteUptickPin), increaseMinuteISR, RISING);
 
   // Starting timer
   current_time = millis();
