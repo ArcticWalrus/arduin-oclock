@@ -44,7 +44,7 @@ unsigned char alarmStatus = 0;
 // Setting output pin for passive buzzer
 int buzzer = A0;
 
-// Time variables to avoid using delay
+// Time variables to avoid using delay()
 unsigned long current_time;
 unsigned long last_time;
 //unsigned int msPerMin = 1000 * 60;
